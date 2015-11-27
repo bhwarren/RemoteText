@@ -38,7 +38,6 @@ public class SMSServer {
     private boolean stopFindThread = false;
     private boolean stopRequestThread = false;
 
-
     //private AsyncHttpClient client = new AsyncHttpClient();
     private int COMM_PORT = 9998;
     private int SEARCH_PORT = 9999;
