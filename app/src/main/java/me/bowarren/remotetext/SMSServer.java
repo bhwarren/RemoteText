@@ -43,7 +43,6 @@ public class SMSServer {
     private int SEARCH_PORT = 9999;
 
 
-
     boolean computerIsConnected = false;
     String connectedComputerIp;
 
