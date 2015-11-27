@@ -33,7 +33,7 @@ public class SMSServerService extends Service {
         Toast.makeText(this, " Service Started, waiting for a connection", Toast.LENGTH_LONG).show();
 
         //starts listening for requests after a client connects
-        server.startDiscovery();
+        server.findComputer();
 
 
     }
