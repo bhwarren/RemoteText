@@ -1,15 +1,10 @@
 package me.bowarren.remotetext;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,14 +17,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Start the  service
         public void startNewService(View view) {
-
-            startService(new Intent(this, TxtServer.class));
+            Toast.makeText(this, "starting service", Toast.LENGTH_SHORT).show();
+            startService(new Intent(this, SMSServerService.class));
         }
 
         // Stop the  service
         public void stopNewService(View view) {
+            Toast.makeText(this, "stopping service", Toast.LENGTH_SHORT).show();
 
-            stopService(new Intent(this, TxtServer.class));
+            stopService(new Intent(this, SMSServerService.class));
         }
 
         @Override
