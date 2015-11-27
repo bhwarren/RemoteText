@@ -116,6 +116,53 @@ public class SMSServer {
         stopFindThread = false; //reset the boolean so can findthread can be started again later
     }
 
+    private String sendForResponse(String data, InetAddress address, int port,  DatagramSocket socket){
+        boolean worked = sendToIp(data, address, port, socket);
+
+        if(!worked){
+            Log.e("","failed to send to ip: "+address.getHostAddress());
+            return null;
+        }
+
+        //try receiving, and return the response
+        try{
+            byte[] recvBuf = new byte[15000];
+            DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
+            socket.receive(packet);
+
+            return new String(packet.getData());
+
+        }
+        catch(IOException e){
+            Log.e("SMSServer:", e.toString());
+            return null;
+        }
+    }
+
+    //only send the data
+    private boolean sendToIp(String data, InetAddress dest, int port,  DatagramSocket socket) {
+//        try {
+//            dest = InetAddress.getByName(ip);
+//        } catch (UnknownHostException e) {
+//            Log.e("SMSServer:", e.toString());
+//            return false;
+//        }
+
+
+        byte[] sendData = data.getBytes();
+
+        //Send a response that we've been found
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, dest, port);
+        try {
+            socket.send(sendPacket);
+        } catch (IOException e) {
+            Log.e("SMSServer:", e.toString());
+            return false;
+        }
+
+        return true;
+    }
+
     public void stopDiscovery(){
         if(connectSocket != null){
             connectSocket.close();
@@ -185,52 +232,6 @@ public class SMSServer {
     }
 
 
-    private String sendForResponse(String data, InetAddress address, int port,  DatagramSocket socket){
-        boolean worked = sendToIp(data, address, port, socket);
-
-        if(!worked){
-            Log.e("","failed to send to ip: "+address.getHostAddress());
-            return null;
-        }
-
-        //try receiving, and return the response
-        try{
-            byte[] recvBuf = new byte[15000];
-            DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-            socket.receive(packet);
-
-            return new String(packet.getData());
-
-        }
-        catch(IOException e){
-            Log.e("SMSServer:", e.toString());
-            return null;
-        }
-    }
-
-    //only send the data
-    private boolean sendToIp(String data, InetAddress dest, int port,  DatagramSocket socket) {
-//        try {
-//            dest = InetAddress.getByName(ip);
-//        } catch (UnknownHostException e) {
-//            Log.e("SMSServer:", e.toString());
-//            return false;
-//        }
-
-
-        byte[] sendData = data.getBytes();
-
-        //Send a response that we've been found
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, dest, port);
-        try {
-            socket.send(sendPacket);
-        } catch (IOException e) {
-            Log.e("SMSServer:", e.toString());
-            return false;
-        }
-
-        return true;
-    }
 
 //    public class HTTPServer extends NanoHTTPD {
 //        private int PORT;
