@@ -97,8 +97,6 @@ public class SMSServer {
                                 sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                                 connectSocket.send(sendPacket);
                             }
-
-
                         }
                     }
                 } catch (IOException ex) {
