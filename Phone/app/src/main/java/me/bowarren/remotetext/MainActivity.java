@@ -18,14 +18,13 @@ public class MainActivity extends AppCompatActivity {
         // Start the  service
         public void startNewService(View view) {
             Toast.makeText(this, "starting service", Toast.LENGTH_SHORT).show();
-            startService(new Intent(this, SMSServerService.class));
+            startService(new Intent(this, SMSService.class));
         }
 
         // Stop the  service
         public void stopNewService(View view) {
             Toast.makeText(this, "stopping service", Toast.LENGTH_SHORT).show();
-
-            stopService(new Intent(this, SMSServerService.class));
+            stopService(new Intent(this, SMSService.class));
         }
 
         @Override

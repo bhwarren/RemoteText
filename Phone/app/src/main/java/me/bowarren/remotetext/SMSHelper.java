@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class SMSHelper {
 
 
-    //what to do when recieved a text
+    //what to do when recieved a text --> needs to implement the android lib
     public static void onRecieved(){
 
     }
@@ -18,14 +18,16 @@ public class SMSHelper {
     //send the actual sms that was gotten from computer
     public static void sendText(String phoneNumber, String message){
 
-
     }
 
     //get latest texts for the computer
     public static JSONObject getLatestTexts(){
         //for the latest X threads, get latest
         return null;
+    }
 
+    public static JSONObject sendLatestTexts(){
+        return null;
     }
 
 

@@ -3,17 +3,23 @@ package me.bowarren.remotetext;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
+
+import org.java_websocket.drafts.Draft_17;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by bhwarren on 11/20/15.
  */
-public class SMSServerService extends Service {
+public class SMSService extends Service {
 
-    SMSServer server;
+    WSClient wsclient;
+    String serverLocation = "ws://bowarren.me/RemoteText";
 
-
-    public SMSServerService() {}
+    public SMSService() {}
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -24,7 +30,13 @@ public class SMSServerService extends Service {
     @Override
     public void onCreate() {
         Toast.makeText(this, "The new Service was Created", Toast.LENGTH_LONG).show();
-        server = new SMSServer();
+
+        try {
+            WSClient wsClient = new WSClient(new URI(serverLocation), new Draft_17()); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+        }
+        catch(URISyntaxException e){
+            Toast.makeText(this, "Invalid URI for server\n" +e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -33,7 +45,12 @@ public class SMSServerService extends Service {
         Toast.makeText(this, " Service Started, waiting for a connection", Toast.LENGTH_LONG).show();
 
         //starts listening for requests after a client connects
-        server.findComputer();
+        //server.findComputer();
+//        if(wsclient != null){
+//            wsclient.send("hi");
+//            Log.e("remotetext", "hi is sent");
+//        }
+
 
 
     }
@@ -41,8 +58,10 @@ public class SMSServerService extends Service {
     @Override
     public void onDestroy() {
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
-
-        server.stop();
+        if(wsclient != null){
+            wsclient.close();
+        }
+        //server.stop();
     }
 }
 

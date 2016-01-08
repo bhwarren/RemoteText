@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/bhwarren/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.0/db2658f013fb163de4a99274c2eb9e17efe535d2/Java-WebSocket-1.3.0.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="db2658f013fb163de4a99274c2eb9e17efe535d2">
+        <dex dex="/Users/bhwarren/Programming/android/RemoteText/Phone/app/build/intermediates/pre-dexed/debug/Java-WebSocket-1.3.0-5e6ae354019c0c56d0807394bc4bcb232d9bd9a5.jar" />
+    </item>
+
+</items>
