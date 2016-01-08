@@ -1,60 +1,67 @@
+var server = require('http').createServer();
+var url = require('url');
+var WebSocketServer = require('ws').Server;
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-
-var routes = require('./routes/postText');
-var users = require('./routes/users');
+var DBhelper = require('./DBhelper.js');
 
 var app = express();
+var port = 4080;
+var wss = new WebSocketServer({ server: server });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/RemoteText', routes);
-app.use('/users', users);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res) {
+  res.send({ msg: "hello" });
 });
 
-// error handlers
+wss.on('connection', function connection(ws) {
+    var location = url.parse(ws.upgradeReq.url, true);
+    // you might use location.query.access_token to authenticate or share sessions
+    // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+    ws.on('message', function incoming(message) {
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+        console.log('received: %s', message);
+
+        try {
+            message = JSON.parse(message);
+        } catch (e) {
+            console.error(e);
+            ws.send("unrecognized command");
+            return;
+        }
+        console.log(message.command);
+
+
+        switch(message.command) {
+            case "show":
+                DBhelper.show(ws);
+                break;
+            case "clear":
+                DBhelper.clear();
+                break;
+            case "upload":
+                DBhelper.upload(message);
+                break;
+            case "compose":
+                DBhelper.compose(message);
+                break;
+            case "showoutgoing":
+                DBhelper.showOutgoing(ws);
+                break;
+            case "getnextoutgoing":
+                DBhelper.getNextOutgoing(ws);
+                break;
+            case "rmnextoutgoing":
+                DBhelper.rmNextOutgoing();
+                break;
+            default:
+                ws.send("unrecognized command");
+        }
+
     });
-  });
-}
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
 });
 
-
-module.exports = app;
+server.on('request', app);
+server.listen(port, function () {
+    console.log('Listening on ' + server.address().port);
+});
